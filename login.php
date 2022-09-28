@@ -15,6 +15,6 @@ else {
 	$resposta["erro"] = "usuario ou senha não confere";
 }
 
-pg_close($con);
+pg_close($db_con);
 echo json_encode($resposta);
 ?>
