@@ -32,6 +32,8 @@ if(autenticar()) {
 		$preco = $_POST['preco'];
 		$descricao = $_POST['descricao'];
 		
+		$login = $GLOBALS['login'];
+		
 		$hash = md5_file($_FILES['img']['tmp_name']);
 		$nome_arq_img = $dir_imagens . $hash;
 		if (!move_uploaded_file($_FILES["img"]["tmp_name"], $nome_arq_img)) {
