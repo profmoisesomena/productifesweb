@@ -17,19 +17,14 @@ elseif(isset( $_SERVER['HTTP_AUTHORIZATION'])) {
 function autenticar() {
 	$login = trim($GLOBALS['login']);
 	$senha = trim($GLOBALS['senha']);
-	echo $login;
-	echo $senha;
 	$db_con = $GLOBALS['db_con'];
 	// Se a autenticação não foi enviada
 	if(!is_null($login)) {
-		$token = password_hash($senha, PASSWORD_DEFAULT);
-		echo $token;
-		
 		$res_consulta= pg_query($db_con, "SELECT token FROM usuarios WHERE login='$login'");
 
 		if(pg_num_rows($res_consulta) > 0){
 			$linha = pg_fetch_array($res_consulta);
-			if($token == $linha['token']){
+			if(password_verify($senha, $linha['token']){
 				return true;
 			}
 		}
