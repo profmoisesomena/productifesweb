@@ -14,18 +14,20 @@ elseif(isset( $_SERVER['HTTP_AUTHORIZATION'])) {
 		list($login, $senha) = explode(':', base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
 }
 
-function authenticate() {
+function autenticar() {
 	
 	// Se a autenticação não foi enviada
 	if(!is_null($login)) {
 		$login = trim($login);
-		$password = trim($password);
+		$senha = trim($senha);
 		
-		$query = pg_query($con, "SELECT password FROM usuarios WHERE login='$login'");
+		$token = password_hash($senha, PASSWORD_DEFAULT);
+		
+		$res_consulta= pg_query($db_con, "SELECT token FROM usuarios WHERE login='$login'");
 
-		if(pg_num_rows($query) > 0){
-			$row = pg_fetch_array($query);
-			if($password == $row['password']){
+		if(pg_num_rows($res_consulta) > 0){
+			$linha = pg_fetch_array($res_consulta);
+			if($token == $linha['token']){
 				return true;
 			}
 		}

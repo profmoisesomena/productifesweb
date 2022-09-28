@@ -1,20 +1,20 @@
 <?php
 
-require_once('connect_db.php');
-require_once('authenticate.php');
+require_once('conexao_db.php');
+require_once('autenticacao.php');
 
-// array for JSON response
-$response = array();
+// array for JSON resposta
+$resposta = array();
 
-if(authenticate()) {
-	$response["success"] = 1;
+if(autenticar()) {
+	$resposta["sucesso"] = 1;
 }
 else {
 	// senha ou usuario nao confere
-	$response["success"] = 0;
-	$response["error"] = "usuario ou senha não confere";
+	$resposta["sucesso"] = 0;
+	$resposta["erro"] = "usuario ou senha não confere";
 }
 
 pg_close($con);
-echo json_encode($response);
+echo json_encode($resposta);
 ?>
