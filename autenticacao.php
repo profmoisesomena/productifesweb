@@ -14,9 +14,6 @@ elseif(isset( $_SERVER['HTTP_AUTHORIZATION'])) {
 		list($login, $senha) = explode(':', base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
 }
 
-echo $login
-echo $senha
-
 function autenticar() {
 	
 	// Se a autenticação não foi enviada
