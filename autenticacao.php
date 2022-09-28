@@ -24,7 +24,7 @@ function autenticar() {
 
 		if(pg_num_rows($res_consulta) > 0){
 			$linha = pg_fetch_array($res_consulta);
-			if(password_verify($senha, $linha['token']){
+			if(password_verify($senha, $linha['token'])){
 				return true;
 			}
 		}
