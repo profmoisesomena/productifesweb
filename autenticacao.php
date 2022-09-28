@@ -15,12 +15,10 @@ elseif(isset( $_SERVER['HTTP_AUTHORIZATION'])) {
 }
 
 function autenticar() {
-	
+	$login = trim($GLOBALS['login']);
+	$senha = trim($GLOBALS['senha']);
 	// Se a autenticação não foi enviada
 	if(!is_null($login)) {
-		$login = trim($GLOBALS['login']);
-		$senha = trim($GLOBALS['senha']);
-		
 		$token = password_hash($senha, PASSWORD_DEFAULT);
 		
 		$res_consulta= pg_query($db_con, "SELECT token FROM usuarios WHERE login='$login'");
