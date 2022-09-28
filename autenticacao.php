@@ -17,6 +17,7 @@ elseif(isset( $_SERVER['HTTP_AUTHORIZATION'])) {
 function autenticar() {
 	$login = trim($GLOBALS['login']);
 	$senha = trim($GLOBALS['senha']);
+	$db_con = $GLOBALS['db_con'];
 	// Se a autenticação não foi enviada
 	if(!is_null($login)) {
 		$token = password_hash($senha, PASSWORD_DEFAULT);
