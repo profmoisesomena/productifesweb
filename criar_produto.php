@@ -7,12 +7,6 @@
 
 require_once('conexao_db.php');
 require_once('autenticacao.php');
- 
-$dir_imagens = "imagens_produtos/";
-
-if (!file_exists($dir_imagens)) {
-    mkdir($dir_imagens, 0777, true);
-}
 
 // array for JSON resposta
 $resposta = array();
@@ -26,37 +20,43 @@ if(autenticar()) {
 	// descricao - descricao do produto
 	// img - imagem do produto
 	if (isset($_POST['nome']) && isset($_POST['preco']) && isset($_POST['descricao']) && isset($_FILES['img'])) {
-	 
+		
 		// Aqui sao obtidos os parametros
 		$nome = $_POST['nome'];
 		$preco = $_POST['preco'];
 		$descricao = $_POST['descricao'];
 		
-		$login = $GLOBALS['login'];
+		// Para a imagem do produto, primeiramente se determina qual o tipo de imagem.
+		// Isso e feito atraves da obtencao da extensao do arquivo, localizada na parte
+		// final do nome do arquivo (ex. ".jpg")
+		$imageFileType = strtolower(pathinfo(basename($_FILES["img"]["name"]),PATHINFO_EXTENSION));
 		
-		$hash = md5_file($_FILES['img']['tmp_name']);
-		$nome_arq_img = $dir_imagens . $hash;
-		if (!move_uploaded_file($_FILES["img"]["tmp_name"], $nome_arq_img)) {
+		// A imagem e convertida de binario para string atraves do metodo de codificacao
+		// base64
+		$image_base64 = base64_encode(file_get_contents($_FILES['img']['tmp_name']) );
+		
+		// No futuro, clientes que pedirem pela imagem armazenada no BD devem ser 
+		// capazes de converter a string base64 para o formato original binario.
+		// Para que isso possa ser feito, contatena-se no inicio da string base64 da 
+		// imagem o mimetype do arquivo original. O mimetype e um codigo que indica o 
+		// tipo de arquivo e sua extensao.
+		$img = 'data:image/'.$imageFileType.';base64,'.$image_base64;
+
+		// A proxima linha insere um novo produto no BD.
+		// A variavel res_consulta indica se a insercao foi feita corretamente ou nao.
+		$res_consulta = pg_query($db_con, "INSERT INTO produtos(nome, preco, descricao, img, usuarios_login) VALUES('$nome', '$preco', '$descricao', '$img', '$login')");
+		
+		if ($res_consulta) {
+			// Se o produto foi inserido corretamente no servidor, o cliente 
+			// recebe a chave "sucesso" com valor 1
+			$resposta["sucesso"] = 1;
+			$resposta["erro"] = "Produto criado com sucesso";
+		} else {
+			// Se o produto nao foi inserido corretamente no servidor, o cliente 
+			// recebe a chave "sucesso" com valor 0. A chave "erro" indica o 
+			// motivo da falha.
 			$resposta["sucesso"] = 0;
-			$resposta["erro"] = "Erro no upload da imagem. Erro = " . strval($_FILES["img"]["error"]);
-		}
-		else {
-			// A proxima linha insere um novo produto no BD.
-			// A variavel res_consulta indica se a insercao foi feita corretamente ou nao.
-			$res_consulta = pg_query($db_con, "INSERT INTO produtos(nome, preco, descricao, img, usuarios_login) VALUES('$nome', '$preco', '$descricao', '$nome_arq_img', '$login')");
-			
-			if ($res_consulta) {
-				// Se o produto foi inserido corretamente no servidor, o cliente 
-				// recebe a chave "sucesso" com valor 1
-				$resposta["sucesso"] = 1;
-				$resposta["erro"] = "Produto criado com sucesso";
-			} else {
-				// Se o produto nao foi inserido corretamente no servidor, o cliente 
-				// recebe a chave "sucesso" com valor 0. A chave "erro" indica o 
-				// motivo da falha.
-				$resposta["sucesso"] = 0;
-				$resposta["erro"] = "Erro ao criar produto no BD";
-			}
+			$resposta["erro"] = "Erro ao criar produto no BD";
 		}
 	} else {
 		// Se a requisicao foi feita incorretamente, ou seja, os parametros 
