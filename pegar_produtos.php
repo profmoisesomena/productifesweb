@@ -3,19 +3,26 @@
 /*
  * O seguinte codigo retorna para o cliente a lista de produtos 
  * armazenados no servidor. Essa e uma requisicao do tipo GET. 
- * Nao sao necessarios nenhum tipo de parametro.
+ * Devem ser enviados os parâmetro de limit e offset para 
+ * realização da paginação de dados no cliente.
  * A resposta e no formato JSON.
  */
 
+// conexão com bd
 require_once('conexao_db.php');
+
+// autenticação
 require_once('autenticacao.php');
 
 // array for JSON resposta
 $resposta = array();
 
+// verifica se o usuário conseguiu autenticar
 if(autenticar()) {
 	
-	// check for required fields
+	// Primeiro, verifica-se se todos os parametros foram enviados pelo cliente.
+	// limit - quantidade de produtos a ser entregues
+	// offset - indica a partir de qual produto começa a lista
 	if (isset($_GET['limit']) && isset($_GET['offset'])) {
 	 
 		$limit = $_GET['limit'];
@@ -33,10 +40,10 @@ if(autenticar()) {
 		if (pg_num_rows($result) > 0) {
 			while ($linha = pg_fetch_array($result)) {
 				// Para cada produto, sao retornados somente o 
-				// pid (id do produto) e o nome do produto. Nao ha necessidade 
-				// de retornar nesse momento todos os campos de todos os produtos 
-				// pois a app cliente, inicialmente, so precisa do nome do mesmo para 
-				// exibir na lista de produtos. O campo pid e usado pela app cliente 
+				// pid (id do produto), o nome do produto e o preço. Nao ha necessidade 
+				// de retornar nesse momento todos os campos dos produtos 
+				// pois a app cliente, inicialmente, so precisa do nome e preço do mesmo para 
+				// exibir na lista de produtos. O campo id e usado pela app cliente 
 				// para buscar os detalhes de um produto especifico quando o usuario 
 				// o seleciona. Esse tipo de estrategia poupa banda de rede, uma vez 
 				// os detalhes de um produto somente serao transferidos ao cliente 
@@ -58,6 +65,7 @@ else {
 	$resposta["erro"] = "usuario ou senha não confere";
 }
 
+// fecha conexão com o bd
 pg_close($db_con);
 
 // Converte a resposta para o formato JSON.

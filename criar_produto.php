@@ -5,12 +5,16 @@
  * As informacoes de um produto sao recebidas atraves de uma requisicao POST.
  */
 
+// conexão com bd
 require_once('conexao_db.php');
+
+// autenticação
 require_once('autenticacao.php');
 
-// array for JSON resposta
+// array de resposta
 $resposta = array();
 
+// verifica se o usuário conseguiu autenticar
 if(autenticar()) {
 	
 	// Primeiro, verifica-se se todos os parametros foram enviados pelo cliente.

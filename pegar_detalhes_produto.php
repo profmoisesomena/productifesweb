@@ -6,12 +6,16 @@
  * pelo campo id.
  */
 
+// conexão com bd
 require_once('conexao_db.php');
+
+// autenticação
 require_once('autenticacao.php');
 
-// array for JSON resposta
+// array de resposta
 $resposta = array();
 
+// verifica se o usuário conseguiu autenticar
 if(autenticar()) {
  
 	// Verifica se o parametro id foi enviado na requisicao
@@ -26,8 +30,10 @@ if(autenticar()) {
 		if (!empty($res_consulta)) {
 			if (pg_num_rows($res_consulta) > 0) {
 	 
-				// Se o produto existe, os dados de detalhe do produto 
-				// sao adicionados no array de resposta.
+				// Se o produto existe, os dados completos do produto 
+				// sao adicionados no array de resposta. A imagem nao 
+				// e entregue agora pois ha um php exclusivo para obter 
+				// a imagem do produto.
 				$linha = pg_fetch_array($res_consulta);
 	 
 				$resposta["nome"] = $linha["nome"];
