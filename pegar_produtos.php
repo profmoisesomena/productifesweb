@@ -44,7 +44,6 @@ if(autenticar()) {
 				$produto = array();
 				$produto["id"] = $linha["id"];
 				$produto["nome"] = $linha["nome"];
-				$produto["img"] = $linha["img"];
 				$produto["preco"] = $linha["preco"];
 		 
 				// Adiciona o produto no array de produtos.

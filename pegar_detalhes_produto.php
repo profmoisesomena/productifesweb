@@ -33,7 +33,6 @@ if(autenticar()) {
 				$resposta["nome"] = $linha["nome"];
 				$resposta["preco"] = $linha["preco"];
 				$resposta["descricao"] = $linha["descricao"];
-				$resposta["img"] = $linha["img"];
 				$resposta["criado_em"] = $linha["criado_em"];
 				$resposta["criado_por"] = $linha["usuarios_login"];
 				
