@@ -16,6 +16,7 @@ if (isset($_POST['novo_login']) && isset($_POST['nova_senha'])) {
 	$novo_login = trim($_POST['novo_login']);
 	$nova_senha = trim($_POST['nova_senha']);
 	
+	
 	$token = password_hash($nova_senha, PASSWORD_DEFAULT);
 		
 	$usuario_existe = pg_query($db_con, "SELECT login FROM usuarios WHERE login='$novo_login'");
