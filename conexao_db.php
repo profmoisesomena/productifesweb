@@ -2,12 +2,12 @@
 
 // Abre uma conexao com o BD.
 
-//$host        = "host = 127.0.0.1";
-//$port        = "port = 6649";
-//$dbname      = "dbname = pg_products";
-//$credentials = "user = postgres password=0000000";
-
+//$host        = "host = ${{ PGHOST }}";
+//$port        = "port = ${{ PGPORT }}";
+//$dbname      = "dbname = PGDATABASE";
+//$credentials = "user = ${{ PGUSER }} password=${{ PGPASSWORD }}";
+//postgresql://${{ PGUSER }}:${{ PGPASSWORD }}@${{ PGHOST }}:${{ PGPORT }}/${{ PGDATABASE }}
 //$db_con = pg_connect( "$host $port $dbname $credentials"  );
 
-$db_con = pg_connect(getenv("DATABASE_URL"));
+$db_con = pg_connect(getenv("dabase_elephant"));
 ?>
